@@ -742,37 +742,44 @@ int getCost(int cardNumber)
 int playBaron(int choice1, struct gameState *state, int currentPlayer)
 {
     state->numBuys++; //Increase buys by 1!
-    if (choice1 > 0)
+    printf("Baron action card played! One buy phase added. /n");
+
+    if (choice1 ==1) //choose to discard estate card
     {                               //Boolean true or going to discard an estate
-        int p = 0;                  //Iterator for hand!
+        int p = 0;                  //Iterator for hand!v
         int card_not_discarded = 1; //Flag for discard set!
         while (card_not_discarded)
         {
-            if (state->hand[currentPlayer][p] == estate)
-            {                      //Found an estate card!
-                state->coins += 4; //Add 4 coins to the amount of coins
-                state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
-                state->discardCount[currentPlayer]++;
-                for (; p < state->handCount[currentPlayer]; p++)
-                {
-                    state->hand[currentPlayer][p] = state->hand[currentPlayer][p + 1];
+            if (p < state->handCount[currentPlayer]) //if current deck has not been completely iterated
+            {
+                if (state->hand[currentPlayer][p] == estate) // if estate card found in current hand
+                {                                            //Found an estate card!
+                    printf("Found an estate card in current hand. Discard estate card and gained 4 coints for current purchase phase! /n");
+                    state->coins += 4;                       //Add 4 coins to the amount of coins
+                    state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
+                    state->discardCount[currentPlayer]++;
+                    for (; p < state->handCount[currentPlayer]; p++)
+                    {
+                        state->hand[currentPlayer][p] = state->hand[currentPlayer][p + 1];
+                    }
+                    state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
+                    state->handCount[currentPlayer]--;
+                    card_not_discarded = 0; //Exit the loop
                 }
-                state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
-                state->handCount[currentPlayer]--;
-                card_not_discarded = 0; //Exit the loop
             }
-            else if (p > state->handCount[currentPlayer])
+
+            else if (p >= state->handCount[currentPlayer]) //current deck has been completely iterated
             {
                 if (DEBUG)
                 {
                     printf("No estate cards in your hand, invalid choice\n");
-                    printf("Must gain an estate if there are any\n");
+                    printf("Will gain an estate if there are any\n");
                 }
-                if (supplyCount(estate, state) > 0)
+                if (supplyCount(estate, state) > 0) //check if supply has estate to provide to player
                 {
-                    gainCard(estate, state, 0, currentPlayer);
+                    gainCard(estate, state, 0, currentPlayer); //give current player an estate card
 
-                    state->supplyCount[estate]--; //Decrement estates
+                    state->supplyCount[estate]--; //Decrement estate card supply
                     if (supplyCount(estate, state) == 0)
                     {
                         isGameOver(state);
@@ -926,7 +933,7 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
 {
     int i;
     int j;
-    
+
     if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1)
     {
         if (state->deckCount[nextPlayer] > 0)
@@ -1267,7 +1274,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
         return 0;
 
     case tribute:
-        return playTribute( choice1, choice2, state, currentPlayer, handPos, tributeRevealedCards[2], nextPlayer);
+        return playTribute(state, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer);
 
     case ambassador:
         return playAmbassador(choice1, choice2, state, currentPlayer, handPos);
