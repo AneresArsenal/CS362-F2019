@@ -881,26 +881,27 @@ int playAmbassador(int choice1, int choice2, struct gameState *state, int curren
 
     j = 0; //used to check if player has enough cards to discard
 
-    if (choice2 > 2 || choice2 < 0)
+    if (choice2 > 2 || choice2 < 0) // make sure number of cards input is valid
     {
         return -1;
     }
 
-    if (choice1 == handPos)
+    if (choice1 == handPos) //cannot reveal ambassador card
     {
         return -1;
     }
 
-    for (i = 0; i < state->handCount[currentPlayer]; i++)
+    for (i = 0; i < state->handCount[currentPlayer]; i++) //check for duplicates of card chosen to be revealed
     {
-        if (i != handPos && i == state->hand[currentPlayer][choice1] && i != choice1)
+        if (i != handPos && state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1] && i != choice1) //fix suggested by Akifumi Komori on Piazza
         {
             j++;
         }
     }
-    if (j < choice2)
+
+    if (j < choice2 && j > 0) //make sure j is still valid despite less than choice2 inputted
     {
-        return -1;
+        choice2 = j;
     }
 
     if (DEBUG)
@@ -940,19 +941,23 @@ int playAmbassador(int choice1, int choice2, struct gameState *state, int curren
 int playTribute(struct gameState *state, int currentPlayer, int handPos, int tributeRevealedCards[2], int nextPlayer)
 {
     int i;
-    int j;
 
     if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1)
     {
-        if (state->deckCount[nextPlayer] > 0)
+
+        if (state->deckCount[nextPlayer] > 0) // partially referenced from Brian Terrel from Piazza
         {
             tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+            state->discard[nextPlayer][state->discardCount[nextPlayer] - 1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+            state->discardCount[nextPlayer]++;
+            int topDeck = state->deckCount[nextPlayer] - 1;
+            discardCard(topDeck, nextPlayer, state, 0);
             state->deckCount[nextPlayer]--;
         }
-        else if (state->discardCount[nextPlayer] > 0)
+
+        else if (state->discardCount[nextPlayer] > 0) //only one card in the discard pile
         {
             tributeRevealedCards[0] = state->discard[nextPlayer][state->discardCount[nextPlayer] - 1];
-            state->discardCount[nextPlayer]--;
         }
         else
         {
@@ -984,6 +989,17 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
         tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
         state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
         state->deckCount[nextPlayer]--;
+
+        tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+        state->discard[nextPlayer][state->discardCount[nextPlayer] - 1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+        state->discardCount[nextPlayer]++;
+        state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
+        state->deckCount[nextPlayer]--;
+        tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+        state->discard[nextPlayer][state->discardCount[nextPlayer] - 1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+        state->discardCount[nextPlayer]++;
+        state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
+        state->deckCount[nextPlayer]--;
     }
 
     if (tributeRevealedCards[0] == tributeRevealedCards[1])
@@ -1010,6 +1026,8 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
             state->numActions = state->numActions + 2;
         }
     }
+
+    discardCard(handPos, currentPlayer, state, 0); // to make sure card is discarded after use as suggested by Robert Saraceno on Piazza
 
     return 0;
 }
