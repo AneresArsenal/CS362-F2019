@@ -996,7 +996,7 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
         state->deckCount[nextPlayer]--;
 
         tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-        state->discard[nextPlayer][state->discardCount[nextPlayer] ] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+        state->discard[nextPlayer][state->discardCount[nextPlayer]] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
         state->discardCount[nextPlayer]++;
         state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
         state->deckCount[nextPlayer]--;
@@ -1013,7 +1013,7 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
     {
         if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold)
         { //Treasure cards
-            bonus= 2;
+            bonus = 2;
         }
 
         else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall)
@@ -1044,12 +1044,12 @@ int playMine(int choice1, int choice2, struct gameState *state, int currentPlaye
         return -1;
     }
 
-    if (choice2 > treasure_map || choice2 < curse)
+    if (choice2 > gold || choice2 < copper) //change suggested by Matthew Dienhart to ensure only treasure cards are valid
     {
         return -1;
     }
 
-    if ((getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2))
+    if ((getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2)) //make sure swap choice is valid and not more than +3 of card discarded
     {
         return -1;
     }
@@ -1064,7 +1064,7 @@ int playMine(int choice1, int choice2, struct gameState *state, int currentPlaye
     {
         if (state->hand[currentPlayer][i] == j)
         {
-            discardCard(i, currentPlayer, state, 0);
+            discardCard(i, currentPlayer, state, 1);
             break;
         }
     }
