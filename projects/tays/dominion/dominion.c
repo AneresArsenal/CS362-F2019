@@ -938,7 +938,7 @@ int playAmbassador(int choice1, int choice2, struct gameState *state, int curren
     return 0;
 }
 
-int playTribute(struct gameState *state, int currentPlayer, int handPos, int tributeRevealedCards[2], int nextPlayer)
+int playTribute(struct gameState *state, int currentPlayer, int handPos, int tributeRevealedCards[2], int nextPlayer, int bonus)
 {
     int i;
 
@@ -948,7 +948,7 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
         if (state->deckCount[nextPlayer] > 0) // partially referenced from Brian Terrel from Piazza
         {
             tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-            state->discard[nextPlayer][state->discardCount[nextPlayer] - 1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+            state->discard[nextPlayer][state->discardCount[nextPlayer]] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
             state->discardCount[nextPlayer]++;
             int topDeck = state->deckCount[nextPlayer] - 1;
             discardCard(topDeck, nextPlayer, state, 0);
@@ -958,6 +958,8 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
         else if (state->discardCount[nextPlayer] > 0) //only one card in the discard pile
         {
             tributeRevealedCards[0] = state->discard[nextPlayer][state->discardCount[nextPlayer] - 1];
+
+            //removed decrement as discussed by Brian on Piazza
         }
         else
         {
@@ -983,20 +985,18 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
 
             shuffle(nextPlayer, state); //Shuffle the deck
         }
-        tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-        state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
-        state->deckCount[nextPlayer]--;
-        tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-        state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
-        state->deckCount[nextPlayer]--;
+
+        // as suggested by Brian Terrel on Piazza to ensure card is discarded properly once revealed and added follow-up changes
+        // suggested by Chung Weng
 
         tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-        state->discard[nextPlayer][state->discardCount[nextPlayer] - 1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+        state->discard[nextPlayer][state->discardCount[nextPlayer]] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
         state->discardCount[nextPlayer]++;
         state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
         state->deckCount[nextPlayer]--;
+
         tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-        state->discard[nextPlayer][state->discardCount[nextPlayer] - 1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+        state->discard[nextPlayer][state->discardCount[nextPlayer] ] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
         state->discardCount[nextPlayer]++;
         state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
         state->deckCount[nextPlayer]--;
@@ -1009,11 +1009,11 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
         tributeRevealedCards[1] = -1;
     }
 
-    for (i = 0; i <= 2; i++)
+    for (i = 0; i < 2; i++)
     {
         if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold)
         { //Treasure cards
-            state->coins += 2;
+            bonus= 2;
         }
 
         else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall)
@@ -1300,7 +1300,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
         return 0;
 
     case tribute:
-        return playTribute(state, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer);
+        return playTribute(state, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, *bonus);
 
     case ambassador:
         return playAmbassador(choice1, choice2, state, currentPlayer, handPos);
@@ -1529,6 +1529,9 @@ int updateCoins(int player, struct gameState *state, int bonus)
 
     //add bonus
     state->coins += bonus;
+
+    //reset to 0 once added to current state
+    bonus = 0;
 
     return 0;
 }
