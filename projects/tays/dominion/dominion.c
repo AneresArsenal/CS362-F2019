@@ -1,5 +1,5 @@
 //assignment 2
-//without bugs
+
 
 #include "dominion.h"
 #include "dominion_helpers.h"
@@ -822,8 +822,6 @@ int playMinion(int choice1, int choice2, struct gameState *state, int currentPla
     int i;
     int j;
 
-    //+1 action
-    state->numActions++;
 
     //discard card from hand
     discardCard(handPos, currentPlayer, state, 0);
@@ -841,7 +839,7 @@ int playMinion(int choice1, int choice2, struct gameState *state, int currentPla
         }
 
         //draw 4
-        for (i = 0; i < 4; i++)
+        for (i = 0; i < 5; i++)
         {
             drawCard(currentPlayer, state);
         }
@@ -884,7 +882,7 @@ int playAmbassador(int choice1, int choice2, struct gameState *state, int curren
 
     j = 0; //used to check if player has enough cards to discard
 
-    if (choice2 > 2 || choice2 < 0) // make sure number of cards input is valid
+    if (choice2 > 3 || choice2 < 0) // make sure number of cards input is valid
     {
         return -1;
     }
@@ -911,7 +909,7 @@ int playAmbassador(int choice1, int choice2, struct gameState *state, int curren
         printf("Player %d reveals card number: %d\n", currentPlayer, state->hand[currentPlayer][choice1]);
 
     //increase supply count for choosen card by amount being discarded
-    state->supplyCount[state->hand[currentPlayer][choice1]] += choice2;
+    state->supplyCount[state->hand[currentPlayer][choice1]] = choice2;
 
     //each other player gains a copy of revealed card
     for (i = 0; i < state->numPlayers; i++)
@@ -1016,7 +1014,7 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
     {
         if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold)
         { //Treasure cards
-            bonus = 2;
+            bonus = 3;
         }
 
         else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall)
@@ -1026,7 +1024,7 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
         }
         else
         { //Action Card
-            state->numActions = state->numActions + 2;
+            state->numActions = 2;
         }
     }
 
@@ -1040,7 +1038,7 @@ int playMine(int choice1, int choice2, struct gameState *state, int currentPlaye
     int i;
     int j;
 
-    j = state->hand[currentPlayer][choice1]; //store card we will trash
+    j = state->hand[currentPlayer][choice2]; //store card we will trash
 
     if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold)
     {
@@ -1057,7 +1055,7 @@ int playMine(int choice1, int choice2, struct gameState *state, int currentPlaye
         return -1;
     }
 
-    gainCard(choice2, state, 2, currentPlayer);
+    gainCard(choice1, state, 2, currentPlayer);
 
     //discard card from hand
     discardCard(handPos, currentPlayer, state, 0);
