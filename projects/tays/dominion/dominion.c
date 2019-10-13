@@ -765,8 +765,8 @@ int playBaron(int handPos, int choice1, struct gameState *state, int currentPlay
                         state->hand[currentPlayer][p] = state->hand[currentPlayer][p + 1];
                     }
                     state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
-                    state->handCount[currentPlayer]--;
-                    card_not_discarded = 0; //Exit the loop
+                    
+                    card_not_discarded = 1; //Exit the loop
                 }
             }
 
@@ -1064,7 +1064,7 @@ int playMine(int choice1, int choice2, struct gameState *state, int currentPlaye
     {
         if (state->hand[currentPlayer][i] == j)
         {
-            discardCard(i, currentPlayer, state, 1);
+            discardCard(i, currentPlayer, state, 1); //thrash only one card that fits choice1
             break;
         }
     }
