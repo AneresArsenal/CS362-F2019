@@ -15,15 +15,15 @@ int main()
 {
     // initialize variables
     struct gameState pre, post;
-    int k[10] = {estate, gardens, embargo, village, minion, mine, cutpurse,
+    int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy};
 
     printf("Starting Unit Test 1 \n");
 
-    initializeGame(2, k, 9898, &pre);
+    initializeGame(2, k, 1234, &pre);
     printf("Game initialized \n");
 
-    int handPos = 1,
+    int handPos = 0,
         choice1 = 1,
         bonus = 0;
 
@@ -31,27 +31,20 @@ int main()
 
     // set some game state variables
 
-    /* random int between 0 and 19 */
-    int r = rand() % 5;
+    int r = 10;
 
     pre.handCount[currentPlayer] = r;
 
     // randomly assign cards
     for (int i = 0; i < r; i++)
     {
-        pre.hand[currentPlayer][i] = k[i];
+        pre.hand[currentPlayer][i] = k[9 - i];
     }
 
-    // set one to be estate
-    pre.hand[currentPlayer][3] = k[0];
-
-    //added card for [whoseTurn] current player:
-    // toFlag = 0 : add to discard
-    // toFlag = 1 : add to deck
-    // toFlag = 2 : add to hand
-
     memcpy(&post, &pre, sizeof(struct gameState));
-    printf("Created a copy of the game state to compare before function call and after function call. \n");
+    printf("Test case 1: Estate card exist in hand and player choose to discard estate. \n\n");
+    // set one to be estate
+    pre.hand[currentPlayer][4] = estate;
 
     // call the refactored functions
     playBaron(handPos, choice1, &post, currentPlayer, bonus);
@@ -60,24 +53,81 @@ int main()
     // bonus points should be added
     if (post.coins != pre.coins + 4)
     {
-        printf("Bonus not added! \n");
+        printf("Error! Bonus not added! \n");
         printf("Pre-call coin tally: %d \n", pre.coins);
-        printf("Post-call coin tally: %d \n", post.coins);
+        printf("Post-call coin tally: %d \n\n", post.coins);
     }
 
     if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] - 1)
     {
-        printf("Baron card discarded! \n");
+        printf("Valid! Baron card discarded! \n");
         printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
-        printf("Post-call handCount: %d \n", post.handCount[currentPlayer]);
+        printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
     }
 
     if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
     {
-        printf("Baron card not discarded! \n");
+        printf("Error!  Baron card not discarded! \n");
         printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
-        printf("Post-call handCount: %d \n", post.handCount[currentPlayer]);
+        printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
     }
 
+    memcpy(&post, &pre, sizeof(struct gameState));
+    printf("Test case 2: Estate card do exist in hand and player choose to discard estate. \n\n");
+
+    // call the refactored functions
+    playBaron(handPos, choice1, &post, currentPlayer, bonus);
+
+    // assert the results
+    // bonus points should be added
+    if (post.coins == pre.coins)
+    {
+        printf("Valid! Bonus not added! \n");
+        printf("Pre-call coin tally: %d \n", pre.coins);
+        printf("Post-call coin tally: %d \n\n", post.coins);
+    }
+
+    if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] - 1)
+    {
+        printf("Valid! Baron card discarded! \n");
+        printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
+        printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+    }
+
+    if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
+    {
+        printf("Error!  Baron card not discarded! \n");
+        printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
+        printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+    }
+
+    memcpy(&pre, &post, sizeof(struct gameState));
+    printf("Test case 3: Estate card do not exist in hand and player choose not to discard estate. \n\n");
+
+    // call the refactored functions
+    playBaron(handPos, 0, &post, currentPlayer, bonus);
+
+    // assert the results
+    // bonus points should be added
+    if (post.coins == pre.coins)
+    {
+        printf("Valid! Bonus not added! \n");
+        printf("Pre-call coin tally: %d \n", pre.coins);
+        printf("Post-call coin tally: %d \n\n", post.coins);
+    }
+
+    if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] - 1)
+    {
+        printf("Valid! Baron card discarded! \n");
+        printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
+        printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+    }
+
+    if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
+    {
+        printf("Error!  Baron card not discarded! \n");
+        printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
+        printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+    }
     return 0;
 }
