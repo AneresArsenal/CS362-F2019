@@ -746,20 +746,20 @@ int getCost(int cardNumber)
 int playBaron(int handPos, int choice1, struct gameState *state, int currentPlayer, int bonus)
 {
     state->numBuys++; //Increase buys by 1!
-    printf("Baron action card played! One buy phase added. /n");
+    printf("Baron action card played! One buy phase added. \n");
 
-    if (choice1 == 1)               //choose to discard estate card
-    {                               //Boolean true or going to discard an estate
-        int p = 0;                  //Iterator for hand!v
-        int card_not_discarded = 1; //Flag for discard set!
+    if (choice1 == 1)                                                //choose to discard estate card
+    {                                                                //Boolean true or going to discard an estate
+        int p = 0;                                                   //Iterator for hand!v
+        int card_not_discarded = 1;                                  //Flag for discard set!
         while (card_not_discarded)
         {
-            if (p < state->handCount[currentPlayer]) //if current deck has not been completely iterated
+            if (p < state->handCount[currentPlayer])                //if current deck has not been completely iterated
             {
-                if (state->hand[currentPlayer][p] == estate) // if estate card found in current hand
-                {                                            // Found an estate card!
-                    printf("Found an estate card in current hand. Discard estate card and gained 4 coints for current purchase phase! /n");
-                    bonus = 4; //Add 4 bonus coins to the amount of coins as suggested by Adams Rosales
+                if (state->hand[currentPlayer][p] == estate)        // if estate card found in current hand
+                {                                                   // Found an estate card!
+                    printf("Found an estate card in current hand. Discard estate card and gained 4 coints for current purchase phase! \n");
+                    bonus = 4;                                      //Add 4 bonus coins to the amount of coins as suggested by Adams Rosales
 
                     state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
                     state->discardCount[currentPlayer]++;
@@ -769,26 +769,26 @@ int playBaron(int handPos, int choice1, struct gameState *state, int currentPlay
                     }
                     state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
                     
-                    card_not_discarded = 1; //Exit the loop
+                    card_not_discarded = 0;                         //Exit the loop
                 }
             }
 
-            else if (p >= state->handCount[currentPlayer]) //current deck has been completely iterated
+            else if (p >= state->handCount[currentPlayer])          //current deck has been completely iterated
             {
                 if (DEBUG)
                 {
                     printf("No estate cards in your hand, invalid choice\n");
                     printf("Will gain an estate if there are any\n");
                 }
-                if (supplyCount(estate, state) > 0) //check if supply has estate to provide to player
+                if (supplyCount(estate, state) > 0)                 //check if supply has estate to provide to player
                 {
-                    gainCard(estate, state, 0, currentPlayer); //give current player an estate card
+                    gainCard(estate, state, 0, currentPlayer);      //give current player an estate card
                     if (supplyCount(estate, state) == 0)
                     {
                         isGameOver(state);
                     }
                 }
-                card_not_discarded = 0; //Exit the loop
+                card_not_discarded = 0;                             //Exit the loop
             }
 
             else
@@ -802,9 +802,9 @@ int playBaron(int handPos, int choice1, struct gameState *state, int currentPlay
     {
         if (supplyCount(estate, state) > 0)
         {
-            gainCard(estate, state, 0, currentPlayer); //Gain an estate
+            gainCard(estate, state, 0, currentPlayer);          //Gain an estate
 
-            if (supplyCount(estate, state) == 0) //no more estate card
+            if (supplyCount(estate, state) == 0)                //no more estate card
             {
                 isGameOver(state);
             }
