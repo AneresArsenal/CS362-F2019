@@ -758,7 +758,7 @@ int playBaron(int handPos, int choice1, struct gameState *state, int currentPlay
         while (card_not_discarded)
         {
 
-            printf("P >>>> %d \n", p);
+     
 
             if (p < state->handCount[currentPlayer]) //if current deck has not been completely iterated
             {
@@ -782,11 +782,13 @@ int playBaron(int handPos, int choice1, struct gameState *state, int currentPlay
 
             else if (p >= state->handCount[currentPlayer]) //current deck has been completely iterated
             {
-                if (DEBUG)
-                {
-                    printf("No estate cards in your hand, invalid choice\n");
-                    printf("Will gain an estate if there are any\n");
-                }
+                printf("No estate cards in your hand, invalid choice\n");
+                printf("Will gain an estate if there are any\n");
+                // if (DEBUG)
+                // {
+                //     printf("No estate cards in your hand, invalid choice\n");
+                //     printf("Will gain an estate if there are any\n");
+                // }
                 if (supplyCount(estate, state) > 0) //check if supply has estate to provide to player
                 {
                     gainCard(estate, state, 0, currentPlayer); //give current player an estate card
@@ -1038,10 +1040,10 @@ int playTribute(struct gameState *state, int currentPlayer, int handPos, int tri
 
 int playMine(int choice1, int choice2, struct gameState *state, int currentPlayer, int handPos)
 {
-    int i;
+    // int i;
     int j;
 
-    j = state->hand[currentPlayer][choice2]; //store card we will trash
+    j = state->hand[currentPlayer][choice1]; //store card we will trash
 
     if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold)
     {
@@ -1053,25 +1055,12 @@ int playMine(int choice1, int choice2, struct gameState *state, int currentPlaye
         return -1;
     }
 
-    if ((getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2)) //make sure swap choice is valid and not more than +3 of card discarded
-    {
-        return -1;
-    }
-
-    gainCard(choice1, state, 2, currentPlayer);
+    gainCard(choice2, state, 2, currentPlayer);
 
     //discard card from hand
     discardCard(handPos, currentPlayer, state, 0);
 
     //discard trashed card
-    for (i = 0; i < state->handCount[currentPlayer]; i++)
-    {
-        if (state->hand[currentPlayer][i] == j)
-        {
-            discardCard(i, currentPlayer, state, 1); //thrash only one card that fits choice1
-            break;
-        }
-    }
 
     return 0;
 }

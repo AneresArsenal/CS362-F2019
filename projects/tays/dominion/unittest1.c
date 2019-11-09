@@ -1,6 +1,6 @@
 /*
-Assignment 3
-Unit Test 1
+Assignment 3 - Learn how to create unit tests
+Unit Test 1 
 */
 
 #include "dominion.h"
@@ -13,25 +13,21 @@ Unit Test 1
 
 int main()
 {
-    // initialize variables
+    // initialize and set variables
     struct gameState pre, post;
     int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy};
 
-    printf("Starting Unit Test 1 \n");
+    printf("Starting Unit Test 2 \n\n");
 
     initializeGame(2, k, 1234, &pre);
-    printf("Game initialized \n");
+    printf("Game initialized \n\n");
 
     int handPos = 0,
         choice1 = 1,
-        bonus = 0;
-
-    int currentPlayer = 1;
-
-    // set some game state variables
-
-    int r = 10;
+        bonus = 0, 
+        currentPlayer = 1,
+        r = 10;
 
     pre.handCount[currentPlayer] = r;
 
@@ -44,7 +40,7 @@ int main()
     memcpy(&post, &pre, sizeof(struct gameState));
     printf("Test case 1: Estate card exist in hand and player choose to discard estate. \n\n");
     // set one to be estate
-    pre.hand[currentPlayer][4] = estate;
+    post.hand[currentPlayer][4] = estate;
 
     // call the refactored functions
     playBaron(handPos, choice1, &post, currentPlayer, bonus);
@@ -53,27 +49,29 @@ int main()
     // bonus points should be added
     if (post.coins != pre.coins + 4)
     {
-        printf("Error! Bonus not added! \n");
+        printf("Bug found! Bonus not added! \n");
         printf("Pre-call coin tally: %d \n", pre.coins);
         printf("Post-call coin tally: %d \n\n", post.coins);
     }
 
-    if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] - 1)
+    if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 2)
     {
-        printf("Valid! Baron card discarded! \n");
+        printf("Bug #1 Found! Baron card and estate card found should both be discarded! \n");
         printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
         printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
     }
 
-    if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
+    int j = post.discardCount[currentPlayer];
+    for (int i = 0; i < j; i++)
     {
-        printf("Error!  Baron card not discarded! \n");
-        printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
-        printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+        if (post.discard[currentPlayer][i] == estate)
+        {
+            printf("Bug #2 Found! Estate card found in discard pile, player should not have gained one! \n");
+        }
     }
 
     memcpy(&post, &pre, sizeof(struct gameState));
-    printf("Test case 2: Estate card do exist in hand and player choose to discard estate. \n\n");
+    printf("Test case 2: Estate card do not exist in hand and player choose to discard estate. \n\n");
 
     // call the refactored functions
     playBaron(handPos, choice1, &post, currentPlayer, bonus);
@@ -85,13 +83,6 @@ int main()
         printf("Valid! Bonus not added! \n");
         printf("Pre-call coin tally: %d \n", pre.coins);
         printf("Post-call coin tally: %d \n\n", post.coins);
-    }
-
-    if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] - 1)
-    {
-        printf("Valid! Baron card discarded! \n");
-        printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
-        printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
     }
 
     if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
@@ -118,7 +109,7 @@ int main()
 
     if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] - 1)
     {
-        printf("Valid! Baron card discarded! \n");
+        printf("Valid! Only Baron card discarded! \n");
         printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
         printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
     }
@@ -129,5 +120,7 @@ int main()
         printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
         printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
     }
+
+    printf("Unit Test 1 completed! \n\n");
     return 0;
 }

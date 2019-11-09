@@ -2,6 +2,8 @@
     "files.associations": {
         "bitset": "c",
         "locale": "c",
-        "string": "c"
+        "string": "c",
+        "stdlib.h": "c",
+        "rngs.h": "c"
     }
 }

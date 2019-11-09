@@ -131,4 +131,13 @@ int getWinners(int players[MAX_PLAYERS], struct gameState *state);
    1, others to 0 */
 
 int playBaron(int handPos, int choice1, struct gameState *state, int currentPlayer, int bonus);
+
+int playMinion(int choice1, int choice2, struct gameState *state, int currentPlayer, int handPos, int bonus);
+
+int playAmbassador(int choice1, int choice2, struct gameState *state, int currentPlayer, int handPos);
+
+int playTribute(struct gameState *state, int currentPlayer, int handPos, int tributeRevealedCards[2], int nextPlayer, int bonus);
+
+int playMine(int choice1, int choice2, struct gameState *state, int currentPlayer, int handPos);
+
 #endif
