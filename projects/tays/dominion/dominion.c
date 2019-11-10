@@ -747,10 +747,6 @@ int playBaron(int handPos, int choice1, struct gameState *state, int currentPlay
     state->numBuys++; //Increase buys by 1!
     printf("Baron action card played! One buy phase added. \n");
 
-    printf("Choice: %d \n", choice1);
-    printf("handPos: %d \n", handPos);
-    printf("Hand count: %d \n", state->handCount[currentPlayer]);
-
     if (choice1 == 1)               //choose to discard estate card
     {                               //Boolean true or going to discard an estate
         int p = 0;                  //Iterator for hand!v
@@ -776,7 +772,7 @@ int playBaron(int handPos, int choice1, struct gameState *state, int currentPlay
                     }
                     state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
 
-                    card_not_discarded = 0; //Exit the loop
+                    card_not_discarded = 1; //Exit the loop
                 }
             }
 

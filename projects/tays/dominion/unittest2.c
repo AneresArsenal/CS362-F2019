@@ -18,7 +18,7 @@ int main()
     int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy};
 
-    printf("Starting Unit Test 2 \n\n");
+    printf("Starting Unit Test 2 - playMinion function \n\n");
 
     initializeGame(2, k, 1234, &pre);
     printf("Game initialized \n\n");
@@ -53,10 +53,12 @@ int main()
         printf("Post-call number of action plays: %d \n\n", post.numActions);
     }
 
+    printf("Test case 1: Choice 1 Selected. \n\n");
+
     // discard used minion card and + 4 cards hence 3 additional cards
     if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] + 3)
     {
-        printf("Bug #2 found! Drawn cards do not equal to 4! \n");
+        printf("Bug #2 found! Current hand not incremented accurately! \n");
         printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
         printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
     }
@@ -68,16 +70,24 @@ int main()
         printf("Post-call coin tally: %d \n\n", post.coins);
     }
 
-    choice1 = 0;
-    choice2 = 1;
-
     memcpy(&post, &pre, sizeof(struct gameState));
     printf("Test case 2: Choose to discard current hand and draw four cards. \n\n");
+
+    // choose to discard hand
+    choice1 = 0;
+    choice2 = 1;
 
     // call the refactored functions
     playMinion(choice1, choice2, &post, currentPlayer, handPos, bonus);
 
     // assert the results
+    // added 1 action play
+    if (post.numActions != pre.numActions + 1)
+    {
+        printf("Bug #1 found! Number of action plays not incremented by 1! \n");
+        printf("Pre-call number of action plays: %d \n", pre.numActions);
+        printf("Post-call number of action plays: %d \n\n", post.numActions);
+    }
     // bonus points should be added
     if (post.coins == pre.coins)
     {
@@ -86,9 +96,11 @@ int main()
         printf("Post-call coin tally: %d \n\n", post.coins);
     }
 
+    printf("Test case 2: Choose to discard current hand and draw four cards. \n\n");
+
     if (post.handCount[currentPlayer] != 4)
     {
-        printf("Bug found! Drawn cards not equal to 4! \n");
+        printf("Bug #2 found! Drawn cards not equal to 4! \n\n");
     }
 
     printf("Unit Test 2 completed! \n\n");

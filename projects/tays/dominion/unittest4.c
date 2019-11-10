@@ -19,7 +19,7 @@ int main()
                  sea_hag, tribute, smithy};
     int tributeRevealedCards[2] = {-1, -1};
 
-    printf("Starting Unit Test 4 \n\n");
+    printf("Starting Unit Test 4 - playTribute function \n\n");
 
     initializeGame(2, k, 1234, &pre);
     printf("Game initialized \n\n");
@@ -41,12 +41,17 @@ int main()
         pre.hand[nextPlayer][i] = k[9 - i];
     }
 
+    // set num actions
+    pre.numActions = 3;
+
     memcpy(&post, &pre, sizeof(struct gameState));
-    printf("Test case 1: Reveal and discard top 2 cards from next player's hand. \n\n");
+    printf("Test case 1: Reveal and discard top 2 cards (1 action card and 1 treasure card) from next player's hand. \n\n");
 
     // set top 2 cards
     post.hand[nextPlayer][10] = village;
     post.hand[nextPlayer][9] = copper;
+
+    
 
     // call the refactored functions
     playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
@@ -60,7 +65,7 @@ int main()
         printf("Post-call deckCount: %d \n\n", post.deckCount[nextPlayer]);
     }
 
-    // copper coins should increase coins by 2
+    // copper coin (treasure card) should increase coins by 2
     if (post.coins != pre.coins + 2)
     {
         printf("Bug #1 found! Wrong amount of bonus added! \n");
@@ -68,10 +73,11 @@ int main()
         printf("Post-call coin tally: %d \n\n", post.coins);
     }
 
-    // village card should increase action plays by 2
-    if (post.numActions != pre.numActions + 2)
+    // village card (action card) should increase action plays by 1 (
+    //deduct one for current phase and + 2 action phases)
+    if (post.numActions != pre.numActions + 1)
     {
-        printf("Bug #2 found! Number of action plays not incremented by 2! \n");
+        printf("Bug #2 found! Number of action plays not incremented by 1! \n");
         printf("Pre-call number of action plays: %d \n", pre.numActions);
         printf("Post-call number of action plays: %d \n\n", post.numActions);
     }
@@ -86,10 +92,11 @@ int main()
     post.hand[nextPlayer][9] = estate;
 
     // assert the results
-    // adds 4 cards to current player's deck and deduct 1 tribute card played
-    if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] + 3)
+    // adds only 2 cards to current player's deck and deduct 1 tribute card played 
+    // (net 1 additional card)
+    if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] + 1)
     {
-        printf("Bug found! Number of cards in player's hand is not accurate! \n");
+        printf("Valid! Number of cards in player's hand is accurate! \n");
         printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
         printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
     }
@@ -104,7 +111,7 @@ int main()
     pre.discardCount[nextPlayer] = 0;
 
     // assert the results
-    // adds 4 cards to current player's deck and deduct 1 tribute card played
+    // no actions taken and deduct 1 tribute card played
     if (post.deckCount[currentPlayer] != pre.deckCount[currentPlayer] - 1)
     {
         printf("Bug found! Only one tribute card should be discarded.\n");

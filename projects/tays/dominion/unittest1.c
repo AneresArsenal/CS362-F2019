@@ -18,14 +18,14 @@ int main()
     int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy};
 
-    printf("Starting Unit Test 2 \n\n");
+    printf("Starting Unit Test 1 - playBaron function \n\n");
 
     initializeGame(2, k, 1234, &pre);
     printf("Game initialized \n\n");
 
     int handPos = 0,
         choice1 = 1,
-        bonus = 0, 
+        bonus = 0,
         currentPlayer = 1,
         r = 10;
 
@@ -62,12 +62,22 @@ int main()
     }
 
     int j = post.discardCount[currentPlayer];
+    int countEstate = 0;
+
     for (int i = 0; i < j; i++)
     {
         if (post.discard[currentPlayer][i] == estate)
         {
-            printf("Bug #2 Found! Estate card found in discard pile, player should not have gained one! \n");
+            countEstate++;
         }
+    }
+
+    // only one estate card should be in the discard pile (the one that is discarded)
+    if (countEstate != 1)
+    {
+        printf("Bug #2 Found!Only one Estate card should exist in discard pile! \n");
+        printf("Pre-call Estate discardCount: %d \n", 0);
+        printf("Post-call Estate discardCount: %d \n\n", countEstate);
     }
 
     memcpy(&post, &pre, sizeof(struct gameState));
@@ -77,7 +87,7 @@ int main()
     playBaron(handPos, choice1, &post, currentPlayer, bonus);
 
     // assert the results
-    // bonus points should be added
+    // bonus points should not be added
     if (post.coins == pre.coins)
     {
         printf("Valid! Bonus not added! \n");

@@ -18,7 +18,7 @@ int main()
     int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy};
 
-    printf("Starting Unit Test 3 \n\n");
+    printf("Starting Unit Test 3 - playAmbassador function \n\n");
 
     initializeGame(2, k, 1234, &pre);
     printf("Game initialized \n\n");
@@ -60,7 +60,7 @@ int main()
     // supply count change should be add choice 2 deduct 2 * # of player (1)
     if (post.supplyCount[village] != pre.supplyCount[village] + choice2 - 2)
     {
-        printf("Bug #2 found! Card not added into and gain from supply correctly! \n");
+        printf("Bug #2 found! Card not added into and deducted from supply correctly! \n");
         printf("Pre-call suuply count: %d \n", pre.supplyCount[village]);
         printf("Post-call suuply count: %d \n\n", post.supplyCount[village]);
     }
