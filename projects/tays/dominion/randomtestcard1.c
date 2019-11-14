@@ -1,6 +1,6 @@
 /*
-Assignment 3 - Learn how to create unit tests
-Unit Test 1 
+Assignment 4 - Learn how to create a Random Tester
+Random Test 1 
 */
 
 #include "dominion.h"
@@ -10,13 +10,9 @@ Unit Test 1
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include<time.h> 
 
 int main()
 {
-    // Use current time as seed for random generator 
-    srand(time(0));
-
     // initialize and set variables
     struct gameState pre, post;
     int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
@@ -34,7 +30,6 @@ int main()
         r = 10;
 
     pre.handCount[currentPlayer] = r;
-    
 
     // randomly assign cards
     for (int i = 0; i < r; i++)
