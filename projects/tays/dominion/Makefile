@@ -21,7 +21,6 @@ runtests: testDrawCard
 	gcov dominion.c >> unittestresult.out
 	cat dominion.c.gcov >> unittestresult.out
 
-
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
 
@@ -29,3 +28,19 @@ all: playdom player
 
 clean:
 	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
+
+
+randomtestresults: randomtestcard1.c randomtestcard2.c randomtestcard3.c dominion.o
+	gcc -o randomtestcard1  randomtestcard1.c dominion.c rngs.c $(CFLAGS)
+	gcc -o randomtestcard2  randomtestcard2.c dominion.c rngs.c $(CFLAGS)
+	gcc -o randomtestcard3  randomtestcard3.c dominion.c rngs.c $(CFLAGS)
+	./randomtestcard1
+	./randomtestcard2
+	./randomtestcard3
+	gcov dominion.c -b -f > randomtestresults.out
+
+randomtestcard1: randomtestcard1.c dominion.o
+	gcc -o randomtestcard1  randomtestcard1.c dominion.c rngs.c $(CFLAGS)
+
+gcov:
+	gcov dominion.c -b -f
