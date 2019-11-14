@@ -71,6 +71,8 @@ struct gameState {
     int discardCount[MAX_PLAYERS];
     int playedCards[MAX_DECK];
     int playedCardCount;
+    int thrashPile[MAX_DECK];
+    int thrashPileCount;
 };
 
 /* All functions return -1 on failure, and DO NOT CHANGE GAME STATE;
@@ -127,5 +129,15 @@ int scoreFor(int player, struct gameState *state);
 int getWinners(int players[MAX_PLAYERS], struct gameState *state);
 /* Set array position of each player who won (remember ties!) to
    1, others to 0 */
+
+int playBaron(int handPos, int choice1, struct gameState *state, int currentPlayer, int bonus);
+
+int playMinion(int choice1, int choice2, struct gameState *state, int currentPlayer, int handPos, int bonus);
+
+int playAmbassador(int choice1, int choice2, struct gameState *state, int currentPlayer, int handPos);
+
+int playTribute(struct gameState *state, int currentPlayer, int handPos, int tributeRevealedCards[2], int nextPlayer, int bonus);
+
+int playMine(int choice1, int choice2, struct gameState *state, int currentPlayer, int handPos);
 
 #endif
