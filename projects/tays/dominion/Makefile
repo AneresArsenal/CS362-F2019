@@ -42,5 +42,11 @@ randomtestresults: randomtestcard1.c randomtestcard2.c randomtestcard3.c dominio
 randomtestcard1: randomtestcard1.c dominion.o
 	gcc -o randomtestcard1  randomtestcard1.c dominion.c rngs.c $(CFLAGS)
 
+randomtestcard2: randomtestcard2.c dominion.o
+	gcc -o randomtestcard2  randomtestcard2.c dominion.c rngs.c $(CFLAGS)
+
+randomtestcard3: randomtestcard3.c dominion.o
+	gcc -o randomtestcard3  randomtestcard3.c dominion.c rngs.c $(CFLAGS)
+
 gcov:
 	gcov dominion.c -b -f
