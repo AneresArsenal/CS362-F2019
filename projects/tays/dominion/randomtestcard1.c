@@ -16,6 +16,7 @@ int main()
 {
     // Use current time as seed for random generator
     srand(time(0));
+    clock_t begin = clock();
 
     //reference https://www.geeksforgeeks.org/rand-and-srand-in-ccpp/
 
@@ -43,7 +44,7 @@ int main()
             choice1 = 1,
             bonus = 0,
             currentPlayer = 1,
-            r = rand() % (10 + 1);
+            r = rand() % (10 + 1); //number of cards in hand
 
         pre.handCount[currentPlayer] = r;
 
@@ -68,12 +69,12 @@ int main()
 
         // assert the results
         // bonus points should be added
-        // if (post.coins != pre.coins + 4)
-        // {
-        //     printf("Bug found! Bonus not added properly! \n");
-        //     printf("Pre-call coin tally: %d \n", pre.coins);
-        //     printf("Post-call coin tally: %d \n\n", post.coins);
-        // }
+        if (post.coins != pre.coins + 4)
+        {
+            printf("Bug found! Bonus not added properly! \n");
+            printf("Pre-call coin tally: %d \n", pre.coins);
+            printf("Post-call coin tally: %d \n\n", post.coins);
+        }
 
         if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 2)
         {
@@ -111,54 +112,58 @@ int main()
 
         // assert the results
         // bonus points should not be added
-        // if (post.coins == pre.coins)
-        // {
-        //     printf("Valid! Bonus not added! \n");
-        //     printf("Pre-call coin tally: %d \n", pre.coins);
-        //     printf("Post-call coin tally: %d \n\n", post.coins);
-        // }
+        if (post.coins == pre.coins)
+        {
+            printf("Valid! Bonus not added! \n");
+            printf("Pre-call coin tally: %d \n", pre.coins);
+            printf("Post-call coin tally: %d \n\n", post.coins);
+        }
 
-        // if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
-        // {
-        //     printf("Error!  Baron card not discarded! \n");
-        //     printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
-        //     printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
-        // }
+        if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
+        {
+            printf("Error!  Baron card not discarded! \n");
+            printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
+            printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+        }
 
-        // memcpy(&pre, &post, sizeof(struct gameState));
-        // printf("Test case 3: Estate card do not exist in hand and player choose not to discard estate. \n\n");
+        memcpy(&pre, &post, sizeof(struct gameState));
+        printf("Test case 3: Estate card do not exist in hand and player choose not to discard estate. \n\n");
 
-        // // call the refactored functions
-        // playBaron(handPos, 0, &post, currentPlayer, bonus);
+        // call the refactored functions
+        playBaron(handPos, 0, &post, currentPlayer, bonus);
 
         // assert the results
         // bonus points should be added
-        // if (post.coins == pre.coins)
-        // {
-        //     printf("Valid! Bonus not added! \n");
-        //     printf("Pre-call coin tally: %d \n", pre.coins);
-        //     printf("Post-call coin tally: %d \n\n", post.coins);
-        // }
+        if (post.coins == pre.coins)
+        {
+            printf("Valid! Bonus not added! \n");
+            printf("Pre-call coin tally: %d \n", pre.coins);
+            printf("Post-call coin tally: %d \n\n", post.coins);
+        }
 
-        // if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] - 1)
-        // {
-        //     printf("Valid! Only Baron card discarded! \n");
-        //     printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
-        //     printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
-        // }
+        if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] - 1)
+        {
+            printf("Valid! Only Baron card discarded! \n");
+            printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
+            printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+        }
 
-        // if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
-        // {
-        //     printf("Error! Baron card not discarded! \n");
-        //     printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
-        //     printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
-        // }
+        if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
+        {
+            printf("Error! Baron card not discarded! \n");
+            printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
+            printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+        }
 
         memcpy(&post, &pre, sizeof(struct gameState));
     }
 
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
     printf("Number of times Bug #1 was discovered in random testing >>> %d \n\n", bug1_found_count);
     printf("Number of times Bug #2 was discovered in random testing >>> %d \n\n", bug2_found_count);
+    printf("Time elapsed >>> %f \n\n", time_spent);
     printf("Random Test 1 completed! \n\n");
     return 0;
 }

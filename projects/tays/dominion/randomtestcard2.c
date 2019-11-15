@@ -10,9 +10,15 @@ Random Test 2
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 int main()
 {
+
+    // Use current time as seed for random generator
+    srand(time(0));
+    clock_t begin = clock();
+
     // initialize and set variables
     struct gameState pre, post;
     int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
@@ -38,7 +44,7 @@ int main()
             choice2 = 0,
             bonus = 0,
             currentPlayer = 1,
-            r = rand() % (10 + 1);
+            r = rand() % (10 + 1); //number of cards in hand
 
         pre.handCount[currentPlayer] = r;
 
@@ -79,12 +85,12 @@ int main()
             printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
         }
 
-        // if (post.coins == pre.coins)
-        // {
-        //     printf("Bug found! Bonus of 2 coins not added! \n");
-        //     printf("Pre-call coin tally: %d \n", pre.coins);
-        //     printf("Post-call coin tally: %d \n\n", post.coins);
-        // }
+        if (post.coins == pre.coins)
+        {
+            printf("Bug found! Bonus of 2 coins not added! \n");
+            printf("Pre-call coin tally: %d \n", pre.coins);
+            printf("Post-call coin tally: %d \n\n", post.coins);
+        }
 
         memcpy(&post, &pre, sizeof(struct gameState));
         printf("Test case 2: Choose to discard current hand and draw four cards. \n\n");
@@ -105,13 +111,14 @@ int main()
             printf("Pre-call number of action plays: %d \n", pre.numActions);
             printf("Post-call number of action plays: %d \n\n", post.numActions);
         }
+
         // bonus points should be added
-        // if (post.coins == pre.coins)
-        // {
-        //     printf("Valid! Bonus not added! \n");
-        //     printf("Pre-call coin tally: %d \n", pre.coins);
-        //     printf("Post-call coin tally: %d \n\n", post.coins);
-        // }
+        if (post.coins == pre.coins)
+        {
+            printf("Valid! Bonus not added! \n");
+            printf("Pre-call coin tally: %d \n", pre.coins);
+            printf("Post-call coin tally: %d \n\n", post.coins);
+        }
 
         printf("Test case 2: Choose to discard current hand and draw four cards. \n\n");
 
@@ -122,8 +129,12 @@ int main()
         }
     }
 
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
     printf("Number of times Bug #1 was discovered in random testing >>> %d \n\n", bug1_found_count);
     printf("Number of times Bug #2 was discovered in random testing >>> %d \n\n", bug2_found_count);
+    printf("Time elapsed >>> %f \n\n", time_spent);
     printf("Random Test 2 completed! \n\n");
     return 0;
 }

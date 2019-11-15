@@ -10,9 +10,14 @@ Random Test 3
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 int main()
 {
+    // Use current time as seed for random generator
+    srand(time(0));
+    clock_t begin = clock();
+
     // initialize and set variables
     struct gameState pre, post;
     int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
@@ -37,9 +42,9 @@ int main()
         int handPos = 0,
             currentPlayer = 0,
             bonus = 0,
-            r = rand() % (10 + 1);
+            r = rand() % (10 + 1); //number of cards in hand
 
-        int nextPlayer = currentPlayer + 1;
+        int nextPlayer = 1;
 
         pre.handCount[currentPlayer] = r;
         pre.deckCount[nextPlayer] = 11;
@@ -54,8 +59,9 @@ int main()
             pre.hand[nextPlayer][j] = k[card];
         }
 
-        // set num actions
-        pre.numActions = 3;
+        //randomize state variables
+        pre.coins = rand() % (20);
+        pre.numActions = rand() % (20);
 
         memcpy(&post, &pre, sizeof(struct gameState));
         printf("Test case 1: Reveal and discard top 2 cards (1 action card and 1 treasure card) from next player's hand. \n\n");
@@ -117,11 +123,10 @@ int main()
         memcpy(&post, &pre, sizeof(struct gameState));
         printf("Test case 3: Next player does not have sufficient cards to reveal \n\n");
 
+        post.deckCount[nextPlayer] = 0;
+        post.discardCount[nextPlayer] = 0;
         // call the refactored functions
         playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
-
-        pre.deckCount[nextPlayer] = 0;
-        pre.discardCount[nextPlayer] = 0;
 
         // assert the results
         // no actions taken and deduct 1 tribute card played
@@ -131,10 +136,33 @@ int main()
             printf("Pre-call deckCount: %d \n", pre.deckCount[currentPlayer]);
             printf("Post-call deckCount: %d \n\n", post.deckCount[currentPlayer]);
         }
+
+        memcpy(&post, &pre, sizeof(struct gameState));
+        printf("Test case 4: Next player only have 1 card to reveal \n\n");
+
+        post.deckCount[nextPlayer] = 1;
+        post.hand[nextPlayer][1] = village;
+        post.discardCount[nextPlayer] = 0;
+        // call the refactored functions
+        playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
+
+        // village card (action card) should increase action plays by 1 (
+        //deduct one for current phase and + 2 action phases)
+        if (post.numActions != pre.numActions + 1)
+        {
+            printf("Bug #2 found! Number of action plays not incremented by 1! \n");
+            bug2_found_count++;
+            printf("Pre-call number of action plays: %d \n", pre.numActions);
+            printf("Post-call number of action plays: %d \n\n", post.numActions);
+        }
     }
+
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
     printf("Number of times Bug #1 was discovered in random testing >>> %d \n\n", bug1_found_count);
     printf("Number of times Bug #2 was discovered in random testing >>> %d \n\n", bug2_found_count);
+    printf("Time elapsed >>> %f \n\n", time_spent);
     printf("Random Test 3 completed! \n\n");
     return 0;
 }
