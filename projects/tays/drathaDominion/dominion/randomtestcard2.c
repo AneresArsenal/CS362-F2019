@@ -42,7 +42,6 @@ int main()
         int handPos = 0,
             choice1 = 1,
             choice2 = 0,
-            bonus = 0,
             currentPlayer = 1,
             r = rand() % (10 + 1); //number of cards in hand
 
@@ -62,7 +61,7 @@ int main()
         printf("Test case 1: Choice 1 Selected. \n\n");
 
         // call the refactored functions
-        playMinion(choice1, choice2, &post, currentPlayer, handPos, bonus);
+        minionCard(choice1, choice2, &post, handPos);
 
         // assert the results
         // added 1 action play
@@ -100,7 +99,7 @@ int main()
         choice2 = 1;
 
         // call the refactored functions
-        playMinion(choice1, choice2, &post, currentPlayer, handPos, bonus);
+        minionCard(choice1, choice2, &post, handPos);
 
         // assert the results
         // added 1 action play

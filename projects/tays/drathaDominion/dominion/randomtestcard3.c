@@ -22,7 +22,6 @@ int main()
     struct gameState pre, post;
     int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy};
-    int tributeRevealedCards[2] = {-1, -1};
 
     int bug1_found_count = 0,
         bug2_found_count = 0;
@@ -39,9 +38,7 @@ int main()
         initializeGame(2, k, 1234, &pre);
         printf("Game initialized \n\n");
 
-        int handPos = 0,
-            currentPlayer = 0,
-            bonus = 0,
+        int currentPlayer = 0,
             r = rand() % (10 + 1); //number of cards in hand
 
         int nextPlayer = 1;
@@ -71,7 +68,7 @@ int main()
         post.hand[nextPlayer][9] = copper;
 
         // call the refactored functions
-        playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
+        tributeCard(&post);
 
         // assert the results
         // discard 2 cards from other player's deck
@@ -105,7 +102,7 @@ int main()
         printf("Test case 2: Reveal and discard top 2 cards from next player's hand with victory cards only. \n\n");
 
         // call the refactored functions
-        playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
+        tributeCard(&post);
 
         post.hand[nextPlayer][10] = estate;
         post.hand[nextPlayer][9] = estate;
@@ -125,8 +122,9 @@ int main()
 
         post.deckCount[nextPlayer] = 0;
         post.discardCount[nextPlayer] = 0;
+
         // call the refactored functions
-        playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
+        tributeCard(&post);
 
         // assert the results
         // no actions taken and deduct 1 tribute card played
@@ -144,7 +142,7 @@ int main()
         post.hand[nextPlayer][1] = village;
         post.discardCount[nextPlayer] = 0;
         // call the refactored functions
-        playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
+        tributeCard(&post);
 
         // village card (action card) should increase action plays by 1 (
         //deduct one for current phase and + 2 action phases)

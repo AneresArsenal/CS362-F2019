@@ -23,9 +23,9 @@ int main()
     initializeGame(2, k, 1234, &pre);
     printf("Game initialized \n\n");
 
-    int handPos = 0,
-        choice1 = 1,
-        bonus = 0,
+    int choice1 = 1,
+        // handPos = 0,
+        // bonus = 0,
         currentPlayer = 1,
         r = 10;
 
@@ -43,22 +43,29 @@ int main()
     post.hand[currentPlayer][4] = estate;
 
     // call the refactored functions
-    playBaron(handPos, choice1, &post, currentPlayer, bonus);
+    baronCard(choice1, &post);
 
     // assert the results
     // bonus points should be added
     if (post.coins != pre.coins + 4)
     {
-        printf("Bug found! Bonus not added! \n");
+        printf("Bug #1 found! Bonus not added properly! \n");
         printf("Pre-call coin tally: %d \n", pre.coins);
         printf("Post-call coin tally: %d \n\n", post.coins);
     }
 
     if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 2)
     {
-        printf("Bug #1 Found! Baron card and estate card found should both be discarded! \n");
+        printf("Bug Found! Baron card and estate card found should both be discarded! \n");
         printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
         printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+    }
+
+    if (post.supplyCount[estate] != pre.supplyCount[estate])
+    {
+        printf("Bug #2 found! No estate card should be gained. \n");
+        printf("Pre-call supply count for Estate: %d \n", pre.supplyCount[estate]);
+        printf("Post-call supply count for Estate: %d \n\n", post.supplyCount[estate]);
     }
 
     int j = post.discardCount[currentPlayer];
@@ -75,7 +82,7 @@ int main()
     // only one estate card should be in the discard pile (the one that is discarded)
     if (countEstate != 1)
     {
-        printf("Bug #2 Found!Only one Estate card should exist in discard pile! \n");
+        printf("Bug Found!Only one Estate card should exist in discard pile! \n");
         printf("Pre-call Estate discardCount: %d \n", 0);
         printf("Post-call Estate discardCount: %d \n\n", countEstate);
     }
@@ -84,7 +91,7 @@ int main()
     printf("Test case 2: Estate card do not exist in hand and player choose to discard estate. \n\n");
 
     // call the refactored functions
-    playBaron(handPos, choice1, &post, currentPlayer, bonus);
+    baronCard(choice1, &post);
 
     // assert the results
     // bonus points should not be added
@@ -102,11 +109,19 @@ int main()
         printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
     }
 
+        if (post.supplyCount[estate] != pre.supplyCount[estate] - 1)
+    {
+        printf("Bug #2 found! Estate card not gained. \n");
+        printf("Pre-call supply count for Estate: %d \n", pre.supplyCount[estate]);
+        printf("Post-call supply count for Estate: %d \n\n", post.supplyCount[estate]);
+    }
+
+
     memcpy(&pre, &post, sizeof(struct gameState));
     printf("Test case 3: Estate card do not exist in hand and player choose not to discard estate. \n\n");
 
     // call the refactored functions
-    playBaron(handPos, 0, &post, currentPlayer, bonus);
+    baronCard(choice1, &post);
 
     // assert the results
     // bonus points should be added
@@ -126,9 +141,16 @@ int main()
 
     if (post.handCount[currentPlayer] != pre.handCount[currentPlayer] - 1)
     {
-        printf("Error!  Baron card not discarded! \n");
+        printf("Error! Baron card not discarded! \n");
         printf("Pre-call handCount: %d \n", pre.handCount[currentPlayer]);
         printf("Post-call handCount: %d \n\n", post.handCount[currentPlayer]);
+    }
+
+        if (post.supplyCount[estate] != pre.supplyCount[estate] - 1)
+    {
+        printf("Bug #2 found! Estate card not gained. \n");
+        printf("Pre-call supply count for Estate: %d \n", pre.supplyCount[estate]);
+        printf("Post-call supply count for Estate: %d \n\n", post.supplyCount[estate]);
     }
 
     printf("Unit Test 1 completed! \n\n");

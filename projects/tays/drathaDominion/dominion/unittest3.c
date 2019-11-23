@@ -46,7 +46,7 @@ int main()
     post.hand[currentPlayer][7] = village;
 
     // call the refactored functions
-    playAmbassador(choice1, choice2, &post, currentPlayer, handPos);
+    ambassadorCard(choice1, choice2, &post, handPos);
 
     // assert the results
     // discard max 2 cards i.e. discard Ambassador card + 2 cards max
@@ -71,7 +71,7 @@ int main()
     choice2 = 0;
 
     // call the refactored functions
-    playAmbassador(choice1, choice2, &post, currentPlayer, handPos);
+    ambassadorCard(choice1, choice2, &post, handPos);
 
     // assert the results
     // discard only Ambassador card

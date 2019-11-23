@@ -17,16 +17,15 @@ int main()
     struct gameState pre, post;
     int k[10] = {feast, gardens, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy};
-    int tributeRevealedCards[2] = {-1, -1};
+    // int tributeRevealedCards[2] = {-1, -1};
 
     printf("Starting Unit Test 4 - playTribute function \n\n");
 
     initializeGame(2, k, 1234, &pre);
     printf("Game initialized \n\n");
 
-    int handPos = 0,
-        currentPlayer = 0,
-        bonus = 0,
+    int currentPlayer = 0,
+        // bonus = 0,
         r = 10;
 
     int nextPlayer = currentPlayer + 1;
@@ -51,10 +50,8 @@ int main()
     post.hand[nextPlayer][10] = village;
     post.hand[nextPlayer][9] = copper;
 
-    
-
     // call the refactored functions
-    playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
+    tributeCard(&post);
 
     // assert the results
     // discard 2 cards from other player's deck
@@ -86,13 +83,13 @@ int main()
     printf("Test case 2: Reveal and discard top 2 cards from next player's hand with victory cards only. \n\n");
 
     // call the refactored functions
-    playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
+    tributeCard(&post);
 
     post.hand[nextPlayer][10] = estate;
     post.hand[nextPlayer][9] = estate;
 
     // assert the results
-    // adds only 2 cards to current player's deck and deduct 1 tribute card played 
+    // adds only 2 cards to current player's deck and deduct 1 tribute card played
     // (net 1 additional card)
     if (post.handCount[currentPlayer] == pre.handCount[currentPlayer] + 1)
     {
@@ -105,7 +102,7 @@ int main()
     printf("Test case 3: Next player does not have sufficient cards to reveal \n\n");
 
     // call the refactored functions
-    playTribute(&post, currentPlayer, handPos, &tributeRevealedCards[2], nextPlayer, bonus);
+    tributeCard(&post);
 
     pre.deckCount[nextPlayer] = 0;
     pre.discardCount[nextPlayer] = 0;

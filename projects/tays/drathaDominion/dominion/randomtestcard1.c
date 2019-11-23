@@ -40,9 +40,7 @@ int main()
 
         printf("Random Test # %d \n", i);
 
-        int handPos = 0,
-            choice1 = 1,
-            bonus = 0,
+        int choice1 = 1,
             currentPlayer = 1,
             r = rand() % (10 + 1); //number of cards in hand
 
@@ -65,7 +63,7 @@ int main()
         post.hand[currentPlayer][4] = estate;
 
         // call the refactored functions
-        playBaron(handPos, choice1, &post, currentPlayer, bonus);
+        baronCard(choice1, &post);
 
         // assert the results
         // bonus points should be added
@@ -108,7 +106,7 @@ int main()
         printf("Test case 2: Estate card do not exist in hand and player choose to discard estate. \n\n");
 
         // call the refactored functions
-        playBaron(handPos, choice1, &post, currentPlayer, bonus);
+        baronCard(choice1, &post);
 
         // assert the results
         // bonus points should not be added
@@ -130,7 +128,7 @@ int main()
         printf("Test case 3: Estate card do not exist in hand and player choose not to discard estate. \n\n");
 
         // call the refactored functions
-        playBaron(handPos, 0, &post, currentPlayer, bonus);
+        baronCard(choice1, &post);
 
         // assert the results
         // bonus points should be added

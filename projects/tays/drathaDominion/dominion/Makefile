@@ -29,36 +29,26 @@ all: playdom player
 clean:
 	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
 
-unittest_gcov: unittest1.c unittest2.c unittest3.c unittest4.c unittest5.c dominion.o
+gcov: unittest1.c unittest2.c unittest3.c unittest4.c unittest5.c randomtestcard1.c randomtestcard2.c randomtestcard3.c dominion.o
 	gcov dominion.c -b -f
 
-run_unittest_all:
+run_test_all:
 	./unittest1
 	./unittest2
 	./unittest3
 	./unittest4
 	./unittest5
+	./randomtestcard1
+	./randomtestcard2
+	./randomtestcard3
 
-unittest_all: unittest1.c unittest2.c unittest3.c unittest4.c unittest5.c dominion.o
+test_all: unittest1.c unittest2.c unittest3.c unittest4.c unittest5.c dominion.o
 	gcc -o unittest1  unittest1.c dominion.c rngs.c $(CFLAGS)
 	gcc -o unittest2  unittest2.c dominion.c rngs.c $(CFLAGS)
 	gcc -o unittest3  unittest3.c dominion.c rngs.c $(CFLAGS)
 	gcc -o unittest4  unittest4.c dominion.c rngs.c $(CFLAGS)
 	gcc -o unittest5  unittest5.c dominion.c rngs.c $(CFLAGS)
-
-
-unittest1: unittest1.c dominion.o
-	gcc -o unittest1  unittest1.c dominion.c rngs.c $(CFLAGS)
-
-unittest2: unittest2.c dominion.o
-	gcc -o unittest2  unittest2.c dominion.c rngs.c $(CFLAGS)
-
-unittest3: unittest3.c dominion.o
-	gcc -o unittest3  unittest3.c dominion.c rngs.c $(CFLAGS)
-
-unittest4: unittest4.c dominion.o
-	gcc -o unittest4  unittest4.c dominion.c rngs.c $(CFLAGS)
-
-unittest5: unittest5.c dominion.o
-	gcc -o unittest5  unittest5.c dominion.c rngs.c $(CFLAGS)
+	gcc -o randomtestcard1  randomtestcard1.c dominion.c rngs.c $(CFLAGS)
+	gcc -o randomtestcard2  randomtestcard2.c dominion.c rngs.c $(CFLAGS)
+	gcc -o randomtestcard3  randomtestcard3.c dominion.c rngs.c $(CFLAGS)
 	

@@ -45,7 +45,7 @@ int main()
     int checkCost = post.hand[currentPlayer][choice1];
 
     // call the refactored functions
-    playMine(choice1, choice2, &post, currentPlayer, handPos);
+    mineCard(choice1, choice2, &post, handPos);
 
     // assert the results
     //make sure difference of cost is 3 or less (cheaper is fine)
@@ -65,7 +65,7 @@ int main()
     checkCost = post.hand[currentPlayer][choice1];
 
     // call the refactored functions
-    playMine(choice1, choice2, &post, currentPlayer, handPos);
+    mineCard(choice1, choice2, &post, currentPlayer);
 
     // assert the results
     //make sure difference of cost is 3 or less (cheaper is fine)
@@ -74,14 +74,6 @@ int main()
         printf("Valid! Swap is allowed! \n");
         printf("Cost of card requested: %d \n", getCost(choice2));
         printf("Cost of card discarded: %d \n\n", getCost(checkCost));
-    }
-
-    //make sure card is thrashed and thrashcount is incremented by 1
-    if (post.thrashPileCount != pre.thrashPileCount + 1)
-    {
-        printf("Bug #2 found! Discarded card not thrashed! \n");
-        printf("Pre-call thrash pile count: %d \n", pre.thrashPileCount);
-        printf("Post-call thrash pile count: %d \n\n", post.thrashPileCount);
     }
 
     printf("Unit Test 5 completed! \n\n");
