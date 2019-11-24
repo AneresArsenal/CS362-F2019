@@ -42,6 +42,7 @@ int main()
     // set one to be estate
     post.hand[currentPlayer][4] = estate;
 
+
     // call the refactored functions
     baronCard(choice1, &post);
 
